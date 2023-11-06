@@ -1,8 +1,11 @@
+package com.example.dit;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -10,22 +13,22 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
-
+import com.example.dit.model.Employee;
 
 @Path("/sampleservice")
 public class SampleService {
 	
-	private static Map<String, Customer> employees = new HashMap<String, Customer>();
+	private static Map<String, Employee> employees = new HashMap<String, Employee>();
 	
 	static {
 		
-        Customer employee1 = new Customer();
+        Employee employee1 = new Employee();
         employee1.setEmployeeId("1");
         employee1.setEmployeeName("Fabrizio");
         employee1.setJob("Software Engineer");
         employees.put(employee1.getEmployeeId(), employee1);
         
-        Customer employee2 = new Customer();
+        Employee employee2 = new Employee();
         employee2.setEmployeeId("2");
         employee2.setEmployeeName("Justin");
         employee2.setJob("Business Analyst");
@@ -41,41 +44,63 @@ public class SampleService {
     }
 	
 	@GET
+    @Path("/helloworld")
+    @Produces("text/plain")
+    public String helloWorld(){
+        return "Hello World New";    
+    }
+	
+	
+	@GET
     @Path("/echo/{message}")
     @Produces("text/plain")
     public String echo(@PathParam("message")String message){
         return message;  
     }
-
+	
 	
 	@GET
     @Path("/employees")
     @Produces("application/xml")
-    public List<Customer> listEmployees(){
-        return new ArrayList<Customer>(employees.values());
+    public List<Employee> listEmployees(){
+        return new ArrayList<Employee>(employees.values());
     }
 	
 	@GET
     @Path("/employee/{employeeid}")
     @Produces("application/xml")
-    public Customer getEmployee(@PathParam("employeeid")String employeeId){
+    public Employee getEmployee(@PathParam("employeeid")String employeeId){
 		return employees.get(employeeId);		
+    }
+	
+	@POST
+	@Path("/createxml")
+    @Consumes("application/xml")
+    public String addEmployee(Employee employee) {
+		return "Employee added " +employee.getEmployeeName();		
+    }
+	
+	@POST
+	@Path("/createjson")
+    @Consumes("application/json")
+    public String addJSONEmployee(Employee employee){
+		return "Employee added " +employee.getEmployeeName();		
     }
 	
 	@GET
     @Path("/json/employees/")
     @Produces("application/json")
-    public List<Customer> listEmployeesJSON(){
-		return new ArrayList<Customer>(employees.values());
+    public List<Employee> listEmployeesJSON(){
+		return new ArrayList<Employee>(employees.values());
     }
 
 	@GET
     @Path("/json/employee/{employeeid}")
     @Produces("application/json")
-    public Customer getEmployeeJSON(@PathParam("employeeid")String employeeId){
+    public Employee getEmployeeJSON(@PathParam("employeeid")String employeeId){
 		return employees.get(employeeId);		
     }
 	
-}
 
+}
 
